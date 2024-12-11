@@ -8,6 +8,7 @@ CREATE TABLE projects
     cover_url        VARCHAR(255),
     customer_project BOOLEAN                  DEFAULT FALSE,
     project_url      VARCHAR(255)                           NOT NULL,
+    repo_url         VARCHAR(255)                           NOT NULL,
     views            INTEGER                  DEFAULT 0,
     created_at       TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     updated_at       TIMESTAMP                DEFAULT NOW() NOT NULL,
@@ -20,4 +21,15 @@ CREATE TABLE project_tags
     project_id INTEGER REFERENCES projects (_id),
     tag_id     INTEGER REFERENCES tags (_id),
     PRIMARY KEY (project_id, tag_id)
-)
+);
+
+CREATE TABLE project_updates
+(
+    _id         SERIAL PRIMARY KEY,
+    project_id  INTEGER REFERENCES projects (_id),
+    title       VARCHAR(255) NOT NULL,
+    description TEXT         NOT NULL,
+    update_type VARCHAR(50)  NOT NULL,
+    created_at  TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT valid_update_type CHECK (update_type IN ('feature', 'bug_fix', 'maintenance', 'announcement'))
+);
